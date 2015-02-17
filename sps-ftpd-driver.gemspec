@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'sps-ftpd-driver'
-  s.version = '0.1.0'
+  s.version = '0.1.1'
   s.summary = 'Uses the ftpd gem to publish an SimplePubSub notice whenever a file is uploaded.'
   s.authors = ['James Robertson']
   s.files = Dir['lib/**/*.rb']
