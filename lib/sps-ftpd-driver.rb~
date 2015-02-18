@@ -36,7 +36,7 @@ class SpsFtpdDriver
     ")
 
     def fs.write(ftp_path, contents)
-      message = "%s: uploaded file %s" % [@sps_topic, File.basename(ftp_path)]
+      message = "%s: uploaded file %s" % [@sps_topic, ftp_path)]
       SPSPub.notice message, address: @sps_host, port: @sps_port
       super(ftp_path, contents)
     end
