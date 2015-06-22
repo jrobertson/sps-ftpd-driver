@@ -19,6 +19,12 @@ class SpsFtpdDriver
     @sps_host = opt[:host]
     @sps_port = opt[:port]
     @times = between_times
+    
+    Thread.new do  
+      sp = SPSSubPing.new host: @sps_host, port: @sps_port, \
+                                                  identifier: 'SPSFtpdDriver'
+      sp.start
+    end          
   end
 
   def authenticate(user, password)
@@ -40,7 +46,11 @@ class SpsFtpdDriver
       
       if @times.empty? or ChronicBetween.new(@times).within?(Time.now) then
         message = "%s: uploaded file %s" % [@sps_topic, ftp_path]
-        SPSPub.notice message, address: @sps_host, port: @sps_port
+        begin
+          SPSPub.notice message, address: @sps_host, port: @sps_port
+        rescue
+          puts 'sps-ftp-driver: warning: unable to publish SPS notice ' + ($!).inspect
+        end
       end
       super(ftp_path, contents)
     end

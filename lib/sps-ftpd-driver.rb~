@@ -4,11 +4,12 @@
 
 require 'ftpd'
 require 'sps-pub'
+require 'chronic_between'
 
 
 class SpsFtpdDriver
 
-  def initialize(dir, sps: {})
+  def initialize(dir, sps: {}, between_times: '')
 
     @dir = dir
 
@@ -17,6 +18,7 @@ class SpsFtpdDriver
     @sps_topic = opt[:topic]
     @sps_host = opt[:host]
     @sps_port = opt[:port]
+    @times = between_times
   end
 
   def authenticate(user, password)
@@ -25,19 +27,21 @@ class SpsFtpdDriver
 
   def file_system(user)
 
-    topic, host, port = @sps_topic, @sps_host, @sps_port
-
     fs = Ftpd::DiskFileSystem.new(@dir)
 
     fs.instance_eval("
       @sps_topic = '#{@sps_topic}'
       @sps_host = '#{@sps_host}'
       @sps_port = '#{@sps_port}'
+      @times = '#{@times}'
     ")
 
     def fs.write(ftp_path, contents)
-      message = "%s: uploaded file %s" % [@sps_topic, ftp_path)]
-      SPSPub.notice message, address: @sps_host, port: @sps_port
+      
+      if @times.empty? or ChronicBetween.new(@times).within?(Time.now) then
+        message = "%s: uploaded file %s" % [@sps_topic, ftp_path]
+        SPSPub.notice message, address: @sps_host, port: @sps_port
+      end
       super(ftp_path, contents)
     end
 

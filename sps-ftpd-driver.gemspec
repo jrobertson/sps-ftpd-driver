@@ -1,12 +1,13 @@
 Gem::Specification.new do |s|
   s.name = 'sps-ftpd-driver'
-  s.version = '0.2.0'
+  s.version = '0.3.0'
   s.summary = 'Uses the ftpd gem to publish a SimplePubSub notice whenever a file is uploaded.'
   s.authors = ['James Robertson']
-  s.files = Dir['lib/**/*.rb']
+  s.files = Dir['lib/sps-ftpd-driver.rb']
   s.add_runtime_dependency('ftpd', '~> 1.1', '>=1.1.1')  
   s.add_runtime_dependency('sps-pub', '~> 0.4', '>=0.4.0')
   s.add_runtime_dependency('chronic_between', '~> 0.2', '>=0.2.21')
+  s.add_runtime_dependency('sps-sub-ping', '~> 0.1', '>=0.1.0')
   s.signing_key = '../privatekeys/sps-ftpd-driver.pem'
   s.cert_chain  = ['gem-public_cert.pem']
   s.license = 'MIT'
